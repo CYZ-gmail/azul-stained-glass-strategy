@@ -23,6 +23,9 @@ the simplified finite-horizon model of *Azul: Stained Glass of Sintra*.
   learned reset policy. The reset representation contains the previous 20
   summary features plus five complete 36-feature action blocks (200 features
   in total), with an exact 20-feature ablation on the same labels.
+- `azul_policy_insights.py`: common-random-number opening comparison and a
+  behavioral audit of voluntary resets, activation timing, and second-side
+  fills under the validated policy.
 - `azul_stochastic_model.tex`: Chinese modeling note and experiment log.
 
 ## Reproduce the searches
@@ -39,6 +42,17 @@ python azul_reset_rollout.py \
   --selection-episodes 30000 \
   --final-episodes 100000 \
   --final-thresholds 0.1,0.2,0.35,0.5 \
+  --seed 20260841
+```
+
+```bash
+python azul_policy_insights.py \
+  --collection-episodes 10000 \
+  --states 1600 \
+  --rollouts 128 \
+  --opening-episodes 20000 \
+  --trace-episodes 15000 \
+  --threshold 0.2 \
   --seed 20260841
 ```
 
