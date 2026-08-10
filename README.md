@@ -20,7 +20,9 @@ the simplified finite-horizon model of *Azul: Stained Glass of Sintra*.
 - `azul_second_order_search.py`: interaction screening and second-order joint
   search.
 - `azul_reset_rollout.py`: paired-rollout training and validation of the
-  learned reset policy.
+  learned reset policy. The reset representation contains the previous 20
+  summary features plus five complete 36-feature action blocks (200 features
+  in total), with an exact 20-feature ablation on the same labels.
 - `azul_stochastic_model.tex`: Chinese modeling note and experiment log.
 
 ## Reproduce the searches
@@ -31,18 +33,21 @@ python azul_second_order_search.py screen --episodes 16000 --seed 20260830
 
 ```bash
 python azul_reset_rollout.py \
-  --collection-episodes 8000 \
-  --states 1000 \
-  --rollouts 192 \
+  --collection-episodes 10000 \
+  --states 1600 \
+  --rollouts 128 \
   --selection-episodes 30000 \
   --final-episodes 100000 \
-  --final-thresholds 0.1,0.2,0.35 \
-  --seed 20260842
+  --final-thresholds 0.1,0.2,0.35,0.5 \
+  --seed 20260841
 ```
 
-The recommended score/reset trade-off uses the learned reset threshold 0.2.
-On the untouched 100,000-trajectory test set it reduced mean total resets from
-11.2830 to 10.6812 while increasing mean score from 45.2860 to 45.4450.
+The maximum-score candidate uses threshold 0.1.  On the untouched
+100,000-trajectory test set it scored 45.5747 with 10.4562 completed sides and
+10.6447 total resets.  The recommended score/reset trade-off uses threshold
+0.2: 45.5666 points, 10.4906 completed sides, and 10.4726 resets.  Against the
+old parameterized reset rule on the same random trajectories, threshold 0.2
+gained 0.2777 points while reducing total resets by 0.8041.
 
 ## Referencing the code from Overleaf
 
@@ -64,4 +69,3 @@ inside the Overleaf project and include it with `listings`:
 The paper can link to the exact repository commit using `\href{...}{source
 code}`. A commit permalink is preferable to a branch URL because it keeps the
 reported experiment reproducible.
-
