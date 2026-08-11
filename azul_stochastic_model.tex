@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
 \usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
 
 \title{《花砖物语：琉璃之光》的有限时域随机策略模型}
@@ -297,56 +298,55 @@ $\widetilde R_i$ 只表达右侧已经建立的计分结构。把两者拆开后
 w_R=14.3267>0,
 \]
 说明在当前归一化下，独立的右侧激活信息确实被搜索稳定地赋予正价值。训练完成后
-固定全部参数，另用十万条完全独立的随机轨迹进行下节验证。
+固定全部参数，另用十万条完全独立的随机轨迹进行验证。
 
-\section{独立 \texorpdfstring{$R_i$}{Ri} 基准的 \texorpdfstring{$H=45$}{H=45} 结果}
+\subsection{\texorpdfstring{$H=45$}{H=45} 独立验证结果}
 
-十万条新轨迹的验证结果见表\ref{tab:overall}。
-
-\begin{table}[htbp]
-\centering
-\caption{独立 $R_i$ 基准策略的十万条独立样本结果}
-\label{tab:overall}
-\begin{tabular}{lr}
-\toprule
-指标 & 独立 $R_i$ 基准 \\
-\midrule
-平均得分 & 44.2047 \\
-得分标准误 & 0.0169 \\
-平均完成面数 & 10.244 \\
-平均重置次数 & 11.249 \\
-其中：主动重置 & 9.667 \\
-其中：被迫重置或空过 & 1.582 \\
-\bottomrule
-\end{tabular}
-\end{table}
+十万条新轨迹上，独立 $R_i$ 基准的平均得分为 $44.2047$（标准误
+$0.0169$），平均完成 $10.244$ 面、重置 $11.249$ 次；其中主动重置
+$9.667$ 次，被迫重置或空过 $1.582$ 次。
 
 该基准的分数第10、50和90百分位数分别为 $37$、$44$ 和 $51$。后续所有增量均以
 这一策略为最原始参照，不再与更早的实验版本比较。
 
-表\ref{tab:window}给出窗户级分布。第6至第8扇窗户几乎只完成第一面，用来建立
+图\ref{fig:ri-window-bars}给出窗户级分布。第6至第8扇窗户几乎只完成第一面，用来建立
 右侧加分结构；第二面则集中在第1至第5扇窗户，其中第2至第4扇最常完成两面。
 这构成后续结构特征扩展需要保持的基本行为模式。
 
-\begin{table}[htbp]
+\begin{figure}[htbp]
 \centering
-\caption{独立 $R_i$ 基准的窗户级完成分布}
-\label{tab:window}
-\begin{tabular}{crrr}
-\toprule
-窗户 $i$ & 平均完成面 & 至少完成一面概率 & 完成两面概率 \\
-\midrule
-1 & 1.372 & 97.2\% & 40.0\% \\
-2 & 1.499 & 96.9\% & 53.0\% \\
-3 & 1.714 & 99.8\% & 71.6\% \\
-4 & 1.552 & 100.0\% & 55.2\% \\
-5 & 1.103 & 100.0\% & 10.3\% \\
-6 & 1.004 & 100.0\% & 0.4\% \\
-7 & 1.000 & 100.0\% & 0.0\% \\
-8 & 0.999 & 99.9\% & 0.0\% \\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=3 by 1,horizontal sep=1.15cm},
+    width=0.27\textwidth,
+    height=5.2cm,
+    ybar,
+    symbolic x coords={1,2,3,4,5,6,7,8},
+    xtick=data,
+    xlabel={窗户编号},
+    tick label style={font=\scriptsize},
+    label style={font=\small},
+    title style={font=\small},
+    ymajorgrids=true,
+    grid style={gray!25},
+    enlarge x limits=0.08,
+]
+\nextgroupplot[title={平均完成面数},ymin=0,ymax=2,ylabel={面数},ytick={0,0.5,1,1.5,2}]
+\addplot[ybar,bar width=8pt,fill=blue!58,draw=blue!75!black] coordinates {
+(1,1.372) (2,1.499) (3,1.714) (4,1.552) (5,1.103) (6,1.004) (7,1.000) (8,0.999)};
+\nextgroupplot[title={至少完成一面},ymin=90,ymax=101,ylabel={概率（\%）},
+    ytick={90,95,100},axis y discontinuity=crunch]
+\addplot[ybar,bar width=8pt,fill=teal!58,draw=teal!70!black] coordinates {
+(1,97.2) (2,96.9) (3,99.8) (4,100.0) (5,100.0) (6,100.0) (7,100.0) (8,99.9)};
+\nextgroupplot[title={完成两面},ymin=0,ymax=80,ylabel={概率（\%）},ytick={0,20,40,60,80}]
+\addplot[ybar,bar width=8pt,fill=orange!70,draw=orange!75!black] coordinates {
+(1,40.0) (2,53.0) (3,71.6) (4,55.2) (5,10.3) (6,0.4) (7,0.0) (8,0.0)};
+\end{groupplot}
+\end{tikzpicture}
+\caption{独立 $R_i$ 基准的窗户级完成分布。三个子图分别保留各自量纲；中图
+纵轴截取为 $90\%$--$101\%$，仅用于辨认接近 $100\%$ 时的细微差异。}
+\label{fig:ri-window-bars}
+\end{figure}
 
 结果并不意味着第二面应严格按窗户编号从小到大完成。第3扇窗户完成两面的概率
 高于第1扇，说明右侧激活收益还必须与Mask、已有进度、玻璃匠位置和重置成本共同
@@ -429,27 +429,42 @@ $w_R>0$ 和 $w_L>0$ 表明右侧结构收益与阶段化左侧收割均被保留
 几乎全部来自更好的完成位置与时序，而不是做出更多完成。
 
 相对独立 $R_i$ 基准，最终报告的平均分提高约 $0.85$，完成面数基本不变，重置
-略有减少。表\ref{tab:rdl-window}进一步给出最终策略的窗户级行为。
+略有减少。图\ref{fig:rdl-window-bars}进一步给出最终策略的窗户级行为。
 
-\begin{table}[htbp]
+\begin{figure}[htbp]
 \centering
-\caption{$RDL$ 联合策略的窗户级完成分布}
-\label{tab:rdl-window}
-\begin{tabular}{crrr}
-\toprule
-窗户 $i$ & 平均完成面 & 至少完成一面概率 & 完成两面概率 \\
-\midrule
-1 & 1.274 & 92.7\% & 34.7\% \\
-2 & 1.542 & 97.6\% & 56.6\% \\
-3 & 1.764 & 99.7\% & 76.6\% \\
-4 & 1.581 & 100.0\% & 58.1\% \\
-5 & 1.094 & 100.0\% & 9.4\% \\
-6 & 1.004 & 100.0\% & 0.4\% \\
-7 & 1.000 & 100.0\% & 0.0\% \\
-8 & 0.998 & 99.8\% & 0.0\% \\
-\bottomrule
-\end{tabular}
-\end{table}
+\begin{tikzpicture}
+\begin{groupplot}[
+    group style={group size=3 by 1,horizontal sep=1.15cm},
+    width=0.27\textwidth,
+    height=5.2cm,
+    ybar,
+    symbolic x coords={1,2,3,4,5,6,7,8},
+    xtick=data,
+    xlabel={窗户编号},
+    tick label style={font=\scriptsize},
+    label style={font=\small},
+    title style={font=\small},
+    ymajorgrids=true,
+    grid style={gray!25},
+    enlarge x limits=0.08,
+]
+\nextgroupplot[title={平均完成面数},ymin=0,ymax=2,ylabel={面数},ytick={0,0.5,1,1.5,2}]
+\addplot[ybar,bar width=8pt,fill=blue!58,draw=blue!75!black] coordinates {
+(1,1.274) (2,1.542) (3,1.764) (4,1.581) (5,1.094) (6,1.004) (7,1.000) (8,0.998)};
+\nextgroupplot[title={至少完成一面},ymin=90,ymax=101,ylabel={概率（\%）},
+    ytick={90,95,100},axis y discontinuity=crunch]
+\addplot[ybar,bar width=8pt,fill=teal!58,draw=teal!70!black] coordinates {
+(1,92.7) (2,97.6) (3,99.7) (4,100.0) (5,100.0) (6,100.0) (7,100.0) (8,99.8)};
+\nextgroupplot[title={完成两面},ymin=0,ymax=80,ylabel={概率（\%）},ytick={0,20,40,60,80}]
+\addplot[ybar,bar width=8pt,fill=orange!70,draw=orange!75!black] coordinates {
+(1,34.7) (2,56.6) (3,76.6) (4,58.1) (5,9.4) (6,0.4) (7,0.0) (8,0.0)};
+\end{groupplot}
+\end{tikzpicture}
+\caption{$RDL$ 联合策略的窗户级完成分布。三个子图分别保留各自量纲；中图
+纵轴截取为 $90\%$--$101\%$，仅用于辨认接近 $100\%$ 时的细微差异。}
+\label{fig:rdl-window-bars}
+\end{figure}
 
 最终策略仍把第6至第8扇窗户主要作为一次性结构激活器，并把第二面集中在第1至
 第5扇窗户。第3、4、2扇的第二面概率最高，再次说明“越靠左越好”只是条件相同时
