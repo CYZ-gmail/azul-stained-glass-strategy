@@ -6,6 +6,7 @@
 \usepackage{enumitem}
 \usepackage{array}
 \usepackage{xcolor}
+\usepackage{graphicx}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepgfplotslibrary{groupplots}
@@ -315,6 +316,8 @@ $9.667$ 次，被迫重置或空过 $1.582$ 次。
 
 \begin{figure}[htbp]
 \centering
+% 若外部PDF不可用，可在导言区定义 \usetikztimingfallback 启用下方TikZ备份。
+\ifdefined\usetikztimingfallback
 \begin{tikzpicture}
 \begin{groupplot}[
     group style={group size=3 by 1,horizontal sep=1.15cm},
@@ -1624,6 +1627,9 @@ window mean rank
 \addplot[only marks,mark=*,mark size=0.3pt,orange!85!black] coordinates {(8,42.57)};
 \end{groupplot}
 \end{tikzpicture}
+\else
+\includegraphics[width=0.98\textwidth]{azul_completion_timing.pdf}
+\fi
 \caption{当前策略的右端播种---左侧收割时空结构。分位区间均以实际完成该面的
 轨迹为条件；未完成轨迹不被人为记为第45步。第一面圆点旁数字为平均完成顺序；
 第二面圆点面积编码完成概率。}
