@@ -316,8 +316,6 @@ $9.667$ 次，被迫重置或空过 $1.582$ 次。
 
 \begin{figure}[htbp]
 \centering
-% 若外部PDF不可用，可在导言区定义 \usetikztimingfallback 启用下方TikZ备份。
-\ifdefined\usetikztimingfallback
 \begin{tikzpicture}
 \begin{groupplot}[
     group style={group size=3 by 1,horizontal sep=1.15cm},
@@ -1540,96 +1538,7 @@ $22.7\%$。这说明模型真正比较的是重置后开放的左侧候选池和
 
 \begin{figure}[htbp]
 \centering
-\begin{tikzpicture}
-\begin{groupplot}[
-    group style={group size=2 by 1,horizontal sep=1.25cm},
-    width=0.45\textwidth,
-    height=8.2cm,
-    xmin=0.5,
-    xmax=8.5,
-    ymin=0,
-    ymax=45,
-    xtick={1,2,3,4,5,6,7,8},
-    ytick={0,5,10,15,20,25,30,35,40,45},
-    xlabel={窗户编号},
-    ylabel={行动步},
-    ymajorgrids=true,
-    grid style={gray!22},
-    tick label style={font=\small},
-    label style={font=\small},
-    title style={font=\small},
-]
-\nextgroupplot[title={第一面：右端播种}]
-% 第10至第90百分位
-\addplot[blue!55,thin] coordinates {(1,22) (1,42)};
-\addplot[blue!55,thin] coordinates {(2,22) (2,39)};
-\addplot[blue!55,thin] coordinates {(3,16) (3,34)};
-\addplot[blue!55,thin] coordinates {(4,13) (4,29)};
-\addplot[blue!55,thin] coordinates {(5,9) (5,25)};
-\addplot[blue!55,thin] coordinates {(6,2) (6,16)};
-\addplot[blue!55,thin] coordinates {(7,4) (7,18)};
-\addplot[blue!55,thin] coordinates {(8,5) (8,16)};
-% 四分位区间
-\addplot[blue!70!black,very thick] coordinates {(1,27) (1,38)};
-\addplot[blue!70!black,very thick] coordinates {(2,26) (2,36)};
-\addplot[blue!70!black,very thick] coordinates {(3,21) (3,30)};
-\addplot[blue!70!black,very thick] coordinates {(4,17) (4,25)};
-\addplot[blue!70!black,very thick] coordinates {(5,13) (5,21)};
-\addplot[blue!70!black,very thick] coordinates {(6,4) (6,12)};
-\addplot[blue!70!black,very thick] coordinates {(7,6) (7,13)};
-\addplot[blue!70!black,very thick] coordinates {(8,6) (8,12)};
-% 按平均完成顺序连接播种前沿
-\addplot[orange!80!black,densely dashed,semithick]
-coordinates {(6,9.01) (8,9.72) (7,10.09) (5,17.22)
-             (4,21.05) (3,25.25) (2,30.94) (1,32.27)};
-\addplot[only marks,mark=*,mark size=2.7pt,orange!85!black,
-    nodes near coords,point meta=explicit symbolic,
-    every node near coord/.append style={font=\scriptsize,anchor=south west}]
-table[meta=rank] {
-window mean rank
-1 32.27 8
-2 30.94 7
-3 25.25 6
-4 21.05 5
-5 17.22 4
-6 9.01 1
-7 10.09 3
-8 9.72 2
-};
-
-\nextgroupplot[title={第二面：左侧收割},ylabel={}]
-% 第10至第90百分位
-\addplot[blue!45,thin] coordinates {(1,36) (1,44)};
-\addplot[blue!45,thin] coordinates {(2,34) (2,44)};
-\addplot[blue!45,thin] coordinates {(3,30) (3,43)};
-\addplot[blue!45,thin] coordinates {(4,26) (4,41)};
-\addplot[blue!45,thin] coordinates {(5,21) (5,44)};
-\addplot[blue!45,thin] coordinates {(6,21) (6,44)};
-\addplot[blue!45,thin] coordinates {(7,33) (7,44)};
-\addplot[blue!45,thin] coordinates {(8,41) (8,44)};
-% 四分位区间
-\addplot[blue!70!black,very thick] coordinates {(1,39) (1,43)};
-\addplot[blue!70!black,very thick] coordinates {(2,37) (2,42)};
-\addplot[blue!70!black,very thick] coordinates {(3,34) (3,40)};
-\addplot[blue!70!black,very thick] coordinates {(4,30) (4,38)};
-\addplot[blue!70!black,very thick] coordinates {(5,31) (5,43)};
-\addplot[blue!70!black,very thick] coordinates {(6,38) (6,43)};
-\addplot[blue!70!black,very thick] coordinates {(7,40) (7,44)};
-\addplot[blue!70!black,very thick] coordinates {(8,42) (8,44)};
-% 圆点面积表示第二面完成概率
-\addplot[only marks,mark=*,mark size=2.7pt,orange!85!black] coordinates {(1,40.50)};
-\addplot[only marks,mark=*,mark size=3.6pt,orange!85!black] coordinates {(2,39.27)};
-\addplot[only marks,mark=*,mark size=4.4pt,orange!85!black] coordinates {(3,36.67)};
-\addplot[only marks,mark=*,mark size=4.6pt,orange!85!black] coordinates {(4,34.05)};
-\addplot[only marks,mark=*,mark size=2.0pt,orange!85!black] coordinates {(5,35.99)};
-\addplot[only marks,mark=*,mark size=0.9pt,orange!85!black] coordinates {(6,37.60)};
-\addplot[only marks,mark=*,mark size=0.5pt,orange!85!black] coordinates {(7,39.54)};
-\addplot[only marks,mark=*,mark size=0.3pt,orange!85!black] coordinates {(8,42.57)};
-\end{groupplot}
-\end{tikzpicture}
-\else
 \includegraphics[width=0.98\textwidth]{azul_completion_timing.pdf}
-\fi
 \caption{当前策略的右端播种---左侧收割时空结构。分位区间均以实际完成该面的
 轨迹为条件；未完成轨迹不被人为记为第45步。第一面圆点旁数字为平均完成顺序；
 第二面圆点面积编码完成概率。}
